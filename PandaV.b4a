@@ -1,0 +1,267 @@
+﻿Build1=Default,pandav.io
+File1=7eb6176f0e54f58277e9f10f8036dd1c.png
+File10=icon8invalid.png
+File11=icon8receive.png
+File12=icon8scan.png
+File13=icon8send.png
+File14=incon8valid.png
+File15=mainbg.jpg
+File16=mainbg1.png
+File17=MainLy.bal
+File18=PandaVlogoColorTextBlack.png
+File19=PandaVlogoColorTextWhite.png
+File2=db.db
+File20=QrLy.bal
+File21=QRScanLy.bal
+File3=dline.png
+File4=heroavatar.png
+File5=homebg.png
+File6=HomeListLy.bal
+File7=HomeLy.bal
+File8=HomeScrollLy.bal
+File9=icon_back.png
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=core
+Library10=stringutils
+Library11=tabstripviewpager
+Library12=viewsex
+Library13=xui
+Library14=keyvaluestore2
+Library2=javaobject
+Library3=jhsicezxing1
+Library4=json
+Library5=phone
+Library6=randomaccessfile
+Library7=reflection
+Library8=runtimepermissions
+Library9=sql
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~AddManifestText(<uses-feature android:name="android.hardware.telephony" android:required="false" />)~\n~AddManifestText(<uses-feature android:name="android.hardware.camera" android:required="false" />)~\n~AddManifestText(<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />)~\n~AddManifestText(<uses-feature android:name="android.hardware.camera.flash" android:required="false" />)~\n~'AddPermission("android.permission.ACCESS_COARSE_LOCATION")~\n~AddPermission("android.permission.INTERNET")~\n~AddPermission("android.permission.ACCESS_FINE_LOCATION")~\n~AddPermission("android.permission.WAKE_LOCK")~\n~AddPermission("android.permission.DEVICE_POWER")~\n~'AddPermission("android.permission.ACCESS_COARSE_UPDATES")~\n~AddPermission("android.permission.READ_PHONE_STATE")~\n~AddPermission("android.permission.VIBRATE")~\n~AddPermission("android.permission.CAMERA")~\n~AddPermission("android.permission.FLASHLIGHT")~\n~AddPermission("android.hardware.camera")~\n~AddApplicationText(<activity android:name="ice.zxing.CaptureActivity"~\n~            android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden"~\n~            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"~\n~            android:windowSoftInputMode="stateAlwaysHidden">~\n~        </activity>)
+Module1=CustomListView
+Module2=HomeMd
+Module3=QRcode
+Module4=QRMd
+Module5=Starter
+NumberOfFiles=21
+NumberOfLibraries=14
+NumberOfModules=5
+Version=12.8
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: PandaV
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: False
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Private xui As XUI
+	Private Timer1 As Timer
+	Private SQL1 As SQL
+	Private cursor1, cursorSetting As Cursor
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	Private kvs As KeyValueStore
+	Private rp As RuntimePermissions
+	Private shared As String
+	
+	Private lblRegister As Label
+	Private lblLanguage2 As Label
+	Private lblLanguage1 As Label
+	Private lblForgot As Label
+	Private CheckBox1 As CheckBox
+	Private txtPassword As FloatLabeledEditText
+	Private txtUsername As FloatLabeledEditText
+	Private imgLogo As ImageView
+	Private btnLogin As Button
+	Private pnSplash As Panel
+	Private imgSplashLogo As ImageView
+	Private lblCopyright As Label
+	Private strMsg1, strMsg2, strMsg3, strMsg4 As String
+
+	Private CustomListView1 As CustomListView
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("MainLy")
+	
+	shared = rp.GetSafeDirDefaultExternal("")
+	kvs.Initialize(shared, "Userdatastore")
+	
+	If File.Exists(File.DirDefaultExternal ,"db.db") = False Then
+		File.Copy(File.DirAssets,"db.db",File.DirDefaultExternal,"db.db")
+	End If
+	
+	If SQL1.IsInitialized = False Then
+		SQL1.Initialize(File.DirDefaultExternal, "db.db", False)
+	End If
+	
+	If kvs.ContainsKey("CurrLanguage") = False Then
+		kvs.Put("CurrLanguage","English")
+		lblLanguage2.Text = "English"
+	End If
+	
+	txtPassword.EditText.PasswordMode = True
+	
+	If FirstTime Then '如果第一次，显示splash screen
+		btnLogin.Visible = False
+		pnSplash.Visible=True
+		imgSplashLogo.Visible = True
+		lblCopyright.Visible = True
+		Timer1.Initialize("Timer1", 3000)
+		Timer1.Enabled=True
+	Else '否则 (第二次就)不显示splash screen
+		pnSplash.Visible=False
+		Timer1.Enabled=False
+		imgSplashLogo.Visible = False
+		lblCopyright.Visible = False
+		btnLogin.Visible = True
+	End If
+	
+'	RefreshLanguageUI
+	
+	If kvs.Get("RemUsername") = "" Then
+		CheckBox1.Checked = False
+		txtUsername.Text = ""
+		kvs.Put("RemUsername","")
+		txtPassword.Text = ""
+		kvs.Put("RemPassword","")
+	Else
+		CheckBox1.Checked = True
+		txtUsername.Text = kvs.Get("RemUsername")
+		txtPassword.Text = kvs.Get("RemPassword")
+
+	End If
+	
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub Timer1_tick
+	
+	pnSplash.Visible=False
+	Timer1.Enabled = False
+	imgSplashLogo.Visible =False
+	btnLogin.Visible = True
+End Sub
+
+Sub lblLanguage2_Click
+'	StartActivity("MdChangeLanguage")
+End Sub
+
+Sub btnLogin_Click
+	
+	If txtUsername.Text = "" Then
+		Msgbox("Please Fill In Username!","LOGIN")
+	End If
+	
+	If txtPassword.Text = "" Then
+		Msgbox("Please Fill In Password!","LOGIN")
+	End If
+	
+	cursor1 = SQL1.ExecQuery("SELECT * FROM ttUser WHERE ttStatus = 1 AND ttUsername = '" & txtUsername.Text & "'" & " AND ttPassword = '" & txtPassword.Text & "'" )
+	
+	If cursor1.RowCount > 0 Then
+		Private Phone1 As Phone
+		DoEvents
+		Phone1.HideKeyboard(Activity)
+		DoEvents
+		
+'		Get Setting
+		
+		cursor1.Position = 0
+		kvs.Put("CURRID", cursor1.GetString("ID"))
+'		kvs.PutSimple("CURRUID", cursor1.GetString("ttUid"))
+		kvs.Put("REMUSERID", txtUsername.Text)
+		kvs.Put("CURRUSERNAME", cursor1.GetString("ttUsername"))
+		kvs.Put("CURRUSERROLE", cursor1.GetString("ttUserRole")) '用户权限，在DB里面ttUser TABLE 增加用户 admin=0/user=1
+		StartActivity("HomeMd")
+		Activity.Finish
+	Else
+		Msgbox("Incorrect Username Or Password!","LOGIN FAIL")
+		Return
+	End If
+
+	
+	If CheckBox1.Checked = True Then
+		kvs.Put("RemUsername",txtUsername.Text)
+		kvs.Put("RemPassword",txtPassword.Text)
+	Else If CheckBox1.Checked = False Then
+		kvs.Put("RemUsername","")
+		kvs.Put("RemPassword","")
+	End If
+	
+	StartActivity("HomeMd")
+	Activity.Finish
+End Sub
+
+Sub RefreshLanguageUI
+	Select Case kvs.Get("CurrLanguage")
+		Case "中文"
+			
+			txtUsername.Hint = "用户"
+			txtPassword.Hint = "密码"
+			CheckBox1.Text = "记取登入"
+			lblForgot.Text = "忘记密码   "
+			lblLanguage1.Text = "   语言"
+			btnLogin.Text = "登入"
+			lblRegister.Text = "注册"
+			
+			strMsg1 = "确定要离开吗？"
+			strMsg2 = "注意"
+			strMsg3 = "是"
+			strMsg4 = "否"
+
+		Case "English"
+			
+			txtUsername.Hint = "Username"
+			txtPassword.Hint = "Password"
+			CheckBox1.Text = "Remember Me"
+			lblForgot.Text = "Forgot Password   "
+			lblLanguage1.Text = "   Language"
+			btnLogin.Text = "Login"
+			lblRegister.Text = "Register"
+			
+			strMsg1="Are You Sure Want to Exit?"
+			strMsg2 = "Warning"
+			strMsg3 = "Yes"
+			strMsg4 = "No"
+	End Select
+End Sub
