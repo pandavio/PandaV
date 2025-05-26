@@ -1,4 +1,4 @@
-# PandaV B4X App - NFT Access Control Client
+# PandaV App - PDV Access Control Client (ERGO)
 
 PandaV is a blockchain-based mobile access app built with **B4A (Basic4Android)**. It supports **ErgoPay login** with Ergo wallets, allowing users to bind wallet addresses to access sessions, cards, or NFTs.
 
