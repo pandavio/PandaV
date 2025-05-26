@@ -1,1 +1,1 @@
-server_url=http://161.142.75.99:8080/api
+server_url=/api
